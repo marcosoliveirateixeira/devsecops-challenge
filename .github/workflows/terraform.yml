@@ -52,7 +52,8 @@ jobs:
 
     - name: Post Infracost comment
       run: |
-          infracost comment github --path=/tmp/infracost.json \
+          infracost comment github  --tfdir=./infra \
+                                    --path=/tmp/infracost.json \
                                     --repo=$GITHUB_REPOSITORY \
                                     --github-token=${{github.token}} \
                                     --pull-request=${{github.event.pull_request.number}} \
@@ -61,6 +62,6 @@ jobs:
     - name: Apply Terraform
       if: success() && github.event_name == 'push'
       working-directory: infra
-      run: terraform apply tfplan
+      run: terraform destroy tfplan
       env:
         TF_CLI_AUTO_APPROVE: 1
