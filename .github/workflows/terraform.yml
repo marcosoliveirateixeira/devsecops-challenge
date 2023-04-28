@@ -33,7 +33,7 @@ jobs:
       continue-on-error: true
 
     - name: Setup Infracost
-      uses: infracost/actions/setup@v2
+      uses:   uses: infracost/actions/setup@v2.1.0
       with:
         api-key: ${{ secrets.INFRACOST_API_KEY }}
         terraform_plan_path: infra/tfplan
@@ -53,10 +53,10 @@ jobs:
 
     - name: Post Infracost comment
       run: |
-        infracost comment github -p /tmp/infracost.json \
-                                  --repo $GITHUB_REPOSITORY \
-                                  --github-token ${{github.token}} \ 
-                                  --behavior update
+        infracost comment github --path=/tmp/infracost.json \
+                                  --repo=$GITHUB_REPOSITORY \
+                                  --github-token=${{github.token}} \ 
+                                  --behavior=update
 
     - name: Apply Terraform
       if: success() && github.event_name == 'push'

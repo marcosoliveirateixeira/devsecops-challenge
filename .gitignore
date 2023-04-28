@@ -457,3 +457,5 @@ $RECYCLE.BIN/
 
 # Output folder
 out/
+.terraform
+.infracost
