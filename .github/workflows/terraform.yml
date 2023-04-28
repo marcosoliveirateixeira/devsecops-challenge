@@ -50,7 +50,9 @@ jobs:
                         --format=json \
                         --compare-to=/tmp/infracost-base.json \
                         --out-file=/tmp/infracost.json
-
+    - name: Print issue/pull request number
+      run: echo ${{ github.event.number }}
+    
     - name: Post Infracost comment
       uses: peter-evans/create-or-update-comment@v3.0.0
       with:
