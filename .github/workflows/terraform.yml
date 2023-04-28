@@ -38,9 +38,19 @@ jobs:
         api-key: ${{ secrets.INFRACOST_API_KEY }}
         terraform_plan_path: infra/tfplan
 
-    - name: Generate Infracost estimate
-      run: infracost --tfdir ./infra
-      
+    - name: Generate Infracost cost estimate baseline
+      run: |
+        infracost breakdown --path=./infra \
+                            --format=json \
+                            --out-file=/tmp/infracost-base.json
+  
+    - name: Generate Infracost diff
+      run: |
+        infracost diff --path=./infra \
+                        --format=json \
+                        --compare-to=/tmp/infracost-base.json \
+                        --out-file=/tmp/infracost.json
+
     - name: Post Infracost comment
       run: |
         infracost comment \
