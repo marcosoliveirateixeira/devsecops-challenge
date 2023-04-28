@@ -52,12 +52,17 @@ jobs:
                         --out-file=/tmp/infracost.json
 
     - name: Post Infracost comment
-      run: |
-        infracost comment \
-          --format table \
-          --tfdir ./infra \
-          --log-level info \
-          --github-token ${{github.token}}
+            uses: peter-evans/create-or-update-comment@v1
+            with:
+              issue-number: ${{ github.event.number }}
+              body: |
+                ## Infracost estimate
+                
+                ```
+                $ infracost run --path ./infra
+                ```
+                
+                ![Infracost estimate](https://infracost.io/static/assets/infracost-badge-28e22ba54f8aa7a0d0cacc8797ab9db6.svg)
 
     - name: Apply Terraform
       if: success() && github.event_name == 'push'
