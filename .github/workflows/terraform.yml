@@ -1,0 +1,44 @@
+name: Terraform CI
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Install Terraform
+      uses: hashicorp/setup-terraform@v1
+      with:
+        terraform_version: 1.0.3
+
+    - name: Initialize Terraform
+      working-directory: infra
+      run: terraform init
+
+    - name: Validate Terraform
+      working-directory: infra
+      run: terraform validate
+
+    - name: Plan Terraform
+      working-directory: infra
+      id: planning
+      run: terraform plan -out=tfplan
+      continue-on-error: true
+
+    - name: Estimate Terraform Costs
+      uses: infracost/infracost-action@v2
+      with:
+        terraform_plan_path: infra/tfplan
+
+    - name: Apply Terraform
+      if: success() && github.event_name == 'push'
+      working-directory: infra
+      run: terraform apply tfplan
+      env:
+        TF_CLI_AUTO_APPROVE: 1
