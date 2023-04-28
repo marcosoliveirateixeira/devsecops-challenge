@@ -33,7 +33,7 @@ jobs:
       continue-on-error: true
 
     - name: Setup Infracost
-      uses:   uses: infracost/actions/setup@v2.1.0
+      uses: infracost/actions/setup@v2.1.0
       with:
         api-key: ${{ secrets.INFRACOST_API_KEY }}
         terraform_plan_path: infra/tfplan
